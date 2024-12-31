@@ -5,8 +5,8 @@
 
 set -euox pipefail
 
-APP_DIR="$(realpath "${0}" | xargs dirname)/app"
-IMAGE_NAME="${1:-dynamodb-crud-lambda}"
+SRC_DIR="$(realpath "${0}" | xargs dirname)/src"
+IMAGE_NAME="${1:-dynamodb-handler}"
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 AWS_REGION="$(aws configure get region)"
 ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
@@ -19,4 +19,4 @@ docker buildx build \
   --target "${BUILD_TARGET}" \
   --platform "${PLATFORMS}" \
   --provenance false \
-  "${APP_DIR}"
+  "${SRC_DIR}"

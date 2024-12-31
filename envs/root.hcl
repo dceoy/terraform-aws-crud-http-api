@@ -81,7 +81,7 @@ inputs = {
     dynamodb-handler = "app"
   }
   docker_image_build_contexts = {
-    dynamodb-handler = "${local.repo_root}/app"
+    dynamodb-handler = "${local.repo_root}/src"
   }
   docker_image_build_dockerfiles = {
     dynamodb-handler = "Dockerfile"
