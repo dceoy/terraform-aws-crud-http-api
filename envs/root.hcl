@@ -69,7 +69,7 @@ inputs = {
   ecr_repository_names = {
     dynamodb-handler = "dynamodb-handler"
   }
-  ecr_image_secondary_tags                 = compact(split(",", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
+  ecr_image_secondary_tags                 = compact(split("\n", get_env("DOCKER_METADATA_OUTPUT_TAGS", "latest")))
   ecr_image_tag_mutability                 = "MUTABLE"
   ecr_force_delete                         = true
   ecr_lifecycle_policy_semver_image_count  = 9999
