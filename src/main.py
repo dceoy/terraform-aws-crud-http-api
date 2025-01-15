@@ -32,6 +32,7 @@ def _instantiate_dynamodb_table() -> Any:
 
 
 @app.delete("/items/<item_id>")
+@tracer.capture_method
 def delete_item(item_id: str) -> Response:
     """Delete an item from the DynamoDB table by item ID.
 
@@ -53,6 +54,7 @@ def delete_item(item_id: str) -> Response:
 
 
 @app.get("/items/<item_id>")
+@tracer.capture_method
 def get_item(item_id: str) -> Response:
     """Retrieve a specific item from the DynamoDB table by item ID.
 
@@ -88,6 +90,7 @@ def get_item(item_id: str) -> Response:
 
 
 @app.get("/items")
+@tracer.capture_method
 def get_all_items() -> Response:
     """Retrieve all items from the DynamoDB table.
 
@@ -109,6 +112,7 @@ def get_all_items() -> Response:
 
 
 @app.put("/items")
+@tracer.capture_method
 def put_item() -> Response:
     """Add or update an item in the DynamoDB table.
 
@@ -146,8 +150,8 @@ def put_item() -> Response:
         )
 
 
-@tracer.capture_lambda_handler
 @logger.inject_lambda_context(log_event=True)
+@tracer.capture_lambda_handler
 def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, Any]:
     """AWS Lambda function handler.
 

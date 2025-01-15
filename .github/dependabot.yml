@@ -7,9 +7,15 @@ updates:
       interval: daily
     open-pull-requests-limit: 10
   - package-ecosystem: docker
-    directory: /docker/
+    directory: /src/
     schedule:
       interval: daily
+    open-pull-requests-limit: 10
+  - package-ecosystem: pip
+    directory: /src/
+    schedule:
+      interval: daily
+    versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 10
   - package-ecosystem: terraform
     directories:

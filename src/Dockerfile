@@ -21,8 +21,9 @@ RUN \
 
 RUN \
       --mount=type=cache,target=/root/.cache/pip \
-      /var/lang/bin/python -m pip install -U \
-        aws-lambda-powertools awslambdaric boto3 pip
+      --mount=type=bind,source=.,target=/mnt/host \
+      /var/lang/bin/python -m pip install -U awslambdaric pip \
+      && /var/lang/bin/python -m pip install -U -r /mnt/host/requirements.txt
 
 HEALTHCHECK NONE
 
