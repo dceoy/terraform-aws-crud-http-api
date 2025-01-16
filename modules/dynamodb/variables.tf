@@ -16,35 +16,41 @@ variable "kms_key_arn" {
   default     = null
 }
 
-variable "dynamodb_hash_key" {
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table"
+  type        = string
+  default     = null
+}
+
+variable "dynamodb_table_hash_key" {
   description = "Attribute to use as the hash (partition) key for the DynamoDB table"
   type        = string
   default     = "id"
 }
 
-variable "dynamodb_billing_mode" {
+variable "dynamodb_table_billing_mode" {
   description = "Controls how you are charged for read and write throughput and how you manage capacity for DynamoDB"
   type        = string
   default     = "PAY_PER_REQUEST"
   validation {
-    condition     = var.dynamodb_billing_mode == "PROVISIONED" || var.dynamodb_billing_mode == "PAY_PER_REQUEST"
+    condition     = var.dynamodb_table_billing_mode == "PROVISIONED" || var.dynamodb_table_billing_mode == "PAY_PER_REQUEST"
     error_message = "Invalid billing mode. Must be either PROVISIONED or PAY_PER_REQUEST"
   }
 }
 
-variable "dynamodb_read_capacity" {
+variable "dynamodb_table_read_capacity" {
   description = "Number of read units for the index for the provisioned mode of DynamoDB"
   type        = number
   default     = 5
 }
 
-variable "dynamodb_write_capacity" {
+variable "dynamodb_table_write_capacity" {
   description = "Number of write units for the index for the provisioned mode of DynamoDB"
   type        = number
   default     = 5
 }
 
-variable "dynamodb_point_in_time_recovery_enabled" {
+variable "dynamodb_table_point_in_time_recovery_enabled" {
   description = "Enable point-in-time recovery options for DynamoDB"
   type        = bool
   default     = false
