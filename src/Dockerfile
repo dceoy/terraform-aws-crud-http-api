@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION=3.13
-FROM public.ecr.aws/lambda/python:${PYTHON_VERSION} AS base
+FROM public.ecr.aws/lambda/python:${PYTHON_VERSION} AS builder
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -25,16 +25,53 @@ RUN \
       /var/lang/bin/python -m pip install -U awslambdaric pip \
       && /var/lang/bin/python -m pip install -U -r /mnt/host/requirements.txt
 
-HEALTHCHECK NONE
 
+FROM public.ecr.aws/lambda/python:${PYTHON_VERSION} AS app
 
-FROM base AS app
+ARG USER_UID=1001
+ARG USER_GID=1001
+ARG USER_NAME=lambda
+
+COPY --from=builder /var/lang /var/lang
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONIOENCODING=UTF-8
+ENV PIP_NO_CACHE_DIR=off
+ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
+# hadolint ignore=DL3040,DL3041
+RUN \
+      --mount=type=cache,target=/var/cache/yum,sharing=locked \
+      --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+      --mount=type=cache,target=/var/lib/yum,sharing=locked \
+      --mount=type=cache,target=/var/lib/dnf,sharing=locked \
+      dnf -y upgrade \
+      && dnf -y install shadow-utils
+
+RUN \
+      /sbin/groupadd --gid "${USER_GID}" "${USER_NAME}" \
+      && /sbin/useradd --uid "${USER_UID}" --gid "${USER_GID}" --shell /bin/bash --create-home "${USER_NAME}"
+
+# hadolint ignore=DL3040
+RUN \
+      --mount=type=cache,target=/var/cache/yum,sharing=locked \
+      --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+      --mount=type=cache,target=/var/lib/yum,sharing=locked \
+      --mount=type=cache,target=/var/lib/dnf,sharing=locked \
+      dnf -y remove shadow-utils
 
 # ENV LAMBDA_TASK_ROOT=/var/task
 
 RUN \
       --mount=type=bind,source=.,target=/mnt/host \
       cp /mnt/host/main.py "${LAMBDA_TASK_ROOT}/"
+
+HEALTHCHECK NONE
+
+USER "${USER_NAME}"
 
 # ENTRYPOINT ["/var/lang/bin/python", "-m", "awslambdaric"]
 CMD ["main.lambda_handler"]
