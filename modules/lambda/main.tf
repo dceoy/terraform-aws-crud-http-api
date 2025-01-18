@@ -4,7 +4,7 @@ resource "aws_lambda_function" "functions" {
   description                    = "Lambda function for ${each.key}"
   role                           = each.value.arn
   package_type                   = "Image"
-  image_uri                      = local.lambda_image_uris[each.key]
+  image_uri                      = var.lambda_image_uris[each.key]
   architectures                  = var.lambda_architectures
   memory_size                    = var.lambda_memory_sizes[each.key]
   timeout                        = var.lambda_timeout

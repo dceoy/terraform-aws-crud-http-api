@@ -1,29 +1,29 @@
-output "dynamodb_handler_lambda_function_name" {
-  description = "Lambda function name of the DynamoDB handler"
-  value       = aws_lambda_function.functions["dynamodb-handler"].function_name
+output "lambda_function_names" {
+  description = "Lambda function names"
+  value       = { for k, v in aws_lambda_function.functions : k => v.function_name }
 }
 
-output "dynamodb_handler_lambda_function_qualified_arn" {
-  description = "Lambda function qualified ARN of the DynamoDB handler"
-  value       = aws_lambda_function.functions["dynamodb-handler"].qualified_arn
+output "lambda_function_qualified_arns" {
+  description = "Lambda function qualified ARNs"
+  value       = { for k, v in aws_lambda_function.functions : k => v.qualified_arn }
 }
 
-output "dynamodb_handler_lambda_function_version" {
-  description = "Lambda function version of the DynamoDB handler"
-  value       = aws_lambda_function.functions["dynamodb-handler"].version
+output "lambda_function_versions" {
+  description = "Lambda function versions"
+  value       = { for k, v in aws_lambda_function.functions : k => v.version }
 }
 
-output "dynamodb_handler_lambda_function_invoke_arn" {
-  description = "Lambda function invoke ARN of the DynamoDB handler"
-  value       = aws_lambda_function.functions["dynamodb-handler"].invoke_arn
+output "lambda_function_invoke_arns" {
+  description = "Lambda function invoke ARNs"
+  value       = { for k, v in aws_lambda_function.functions : k => v.invoke_arn }
 }
 
-output "dynamodb_handler_lambda_iam_role_arn" {
-  description = "Lambda IAM role ARN of the DynamoDB handler"
-  value       = aws_iam_role.functions["dynamodb-handler"].arn
+output "lambda_iam_role_arns" {
+  description = "Lambda IAM role ARNs"
+  value       = { for k, v in aws_iam_role.functions : k => v.arn }
 }
 
-output "dynamodb_handler_lambda_cloudwatch_logs_log_group_name" {
-  description = "Lambda CloudWatch Logs log group name of the DynamoDB handler"
-  value       = aws_cloudwatch_log_group.functions["dynamodb-handler"].name
+output "lambda_cloudwatch_logs_log_group_names" {
+  description = "Lambda CloudWatch Logs log group names"
+  value       = { for k, v in aws_cloudwatch_log_group.functions : k => v.name }
 }

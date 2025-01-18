@@ -32,28 +32,10 @@ variable "iam_role_force_detach_policies" {
   default     = true
 }
 
-variable "connect_handler_lambda_image_uri" {
-  description = "Container image URI for the connect handler"
-  type        = string
-  default     = null
-}
-
-variable "disconnect_handler_lambda_image_uri" {
-  description = "Container image URI for the disconnect handler"
-  type        = string
-  default     = null
-}
-
-variable "sendmessage_handler_lambda_image_uri" {
-  description = "Container image URI for the sendmessage handler"
-  type        = string
-  default     = null
-}
-
-variable "default_handler_lambda_image_uri" {
-  description = "Container image URI for the default handler"
-  type        = string
-  default     = null
+variable "lambda_image_uris" {
+  description = "Container image URIs for Lambda (key: arbitrary key, value: image URI)"
+  type        = map(string)
+  default     = {}
 }
 
 variable "lambda_architectures" {

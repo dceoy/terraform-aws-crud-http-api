@@ -14,16 +14,20 @@ dependency "kms" {
 dependency "lambda" {
   config_path = "../lambda"
   mock_outputs = {
-    dynamodb_handler_lambda_function_qualified_arn = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
-    dynamodb_handler_lambda_function_invoke_arn    = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
+    lambda_function_qualified_arns = {
+      dynamodb_handler = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
+    }
+    lambda_function_invoke_arns = {
+      dynamodb_handler = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
+    }
   }
   mock_outputs_merge_strategy_with_state = "shallow"
 }
 
 inputs = {
   kms_key_arn                                    = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
-  dynamodb_handler_lambda_function_qualified_arn = dependency.lambda.outputs.dynamodb_handler_lambda_function_qualified_arn
-  dynamodb_handler_lambda_function_invoke_arn    = dependency.lambda.outputs.dynamodb_handler_lambda_function_invoke_arn
+  dynamodb_handler_lambda_function_qualified_arn = dependency.lambda.outputs.lambda_function_qualified_arns["dynamodb-handler"]
+  dynamodb_handler_lambda_function_invoke_arn    = dependency.lambda.outputs.lambda_function_invoke_arns["dynamodb-handler"]
 }
 
 terraform {

@@ -30,10 +30,10 @@ dependency "dynamodb" {
 }
 
 inputs = {
-  kms_key_arn                       = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
-  dynamodb_handler_lambda_image_uri = dependency.docker.outputs.docker_registry_primary_image_uris["dynamodb-handler"]
+  kms_key_arn       = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
+  lambda_image_uris = dependency.docker.outputs.docker_registry_primary_image_uris
   lambda_environment_variables = {
-    dynamodb-handler = {
+    for k in keys(dependency.docker.outputs.docker_registry_primary_image_uris) : k => {
       DYNAMODB_TABLE_NAME = dependency.dynamodb.outputs.dynamodb_table_id
       SYSTEM_NAME         = include.root.inputs.system_name
       ENV_TYPE            = include.root.inputs.env_type
