@@ -128,7 +128,7 @@ resource "aws_iam_role_policy" "logs" {
       (
         var.kms_key_arn != null ? [
           {
-            Sid      = "AllowKMSAccess"
+            Sid      = "AllowKMSGenerateDataKey"
             Effect   = "Allow"
             Action   = ["kms:GenerateDataKey"]
             Resource = [var.kms_key_arn]
@@ -145,26 +145,42 @@ resource "aws_iam_role_policy" "db" {
   role     = aws_iam_role.functions[each.key].id
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AllowDynamoDBAccess"
-        Effect = "Allow"
-        Action = [
-          "dynamodb:DeleteItem",
-          "dynamodb:GetItem",
-          "dynamodb:PutItem",
-          "dynamodb:Query",
-          "dynamodb:Scan",
-          "dynamodb:UpdateItem"
-        ]
-        Resource = ["arn:aws:dynamodb:${local.region}:${local.account_id}:table/*"]
-        Condition = {
-          StringEquals = {
-            "aws:ResourceTag/SystemName" = var.system_name
-            "aws:ResourceTag/EnvType"    = var.env_type
+    Statement = concat(
+      [
+        {
+          Sid    = "AllowDynamoDBAccess"
+          Effect = "Allow"
+          Action = [
+            "dynamodb:DeleteItem",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:UpdateItem"
+          ]
+          Resource = ["arn:aws:dynamodb:${local.region}:${local.account_id}:table/*"]
+          Condition = {
+            StringEquals = {
+              "aws:ResourceTag/SystemName" = var.system_name
+              "aws:ResourceTag/EnvType"    = var.env_type
+            }
           }
         }
-      }
-    ]
+      ],
+      (
+        var.kms_key_arn != null ? [
+          {
+            Sid    = "AllowKMSAccess"
+            Effect = "Allow"
+            Action = [
+              "kms:Decrypt",
+              "kms:Encrypt",
+              "kms:GenerateDataKey"
+            ]
+            Resource = [var.kms_key_arn]
+          }
+        ] : []
+      )
+    )
   })
 }

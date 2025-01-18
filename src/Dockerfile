@@ -55,14 +55,6 @@ RUN \
       /sbin/groupadd --gid "${USER_GID}" "${USER_NAME}" \
       && /sbin/useradd --uid "${USER_UID}" --gid "${USER_GID}" --shell /bin/bash --create-home "${USER_NAME}"
 
-# hadolint ignore=DL3040
-RUN \
-      --mount=type=cache,target=/var/cache/yum,sharing=locked \
-      --mount=type=cache,target=/var/cache/dnf,sharing=locked \
-      --mount=type=cache,target=/var/lib/yum,sharing=locked \
-      --mount=type=cache,target=/var/lib/dnf,sharing=locked \
-      dnf -y remove shadow-utils
-
 # ENV LAMBDA_TASK_ROOT=/var/task
 
 RUN \

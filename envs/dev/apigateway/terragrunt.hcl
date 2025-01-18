@@ -15,10 +15,10 @@ dependency "lambda" {
   config_path = "../lambda"
   mock_outputs = {
     lambda_function_qualified_arns = {
-      dynamodb_handler = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
+      dynamodb-handler = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
     }
     lambda_function_invoke_arns = {
-      dynamodb_handler = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
+      dynamodb-handler = "arn:aws:lambda:us-east-1:123456789012:function:dynamodb-handler:1"
     }
   }
   mock_outputs_merge_strategy_with_state = "shallow"

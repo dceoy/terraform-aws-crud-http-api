@@ -2,38 +2,38 @@
 # trivy:ignore:avd-aws-0025
 resource "aws_dynamodb_table" "db" {
   name                        = local.dynamodb_table_name
-  billing_mode                = var.dynamodb_table_billing_mode
-  hash_key                    = var.dynamodb_table_hash_key
-  range_key                   = var.dynamodb_table_range_key
-  read_capacity               = var.dynamodb_table_billing_mode == "PROVISIONED" ? var.dynamodb_table_read_capacity : null
-  write_capacity              = var.dynamodb_table_billing_mode == "PROVISIONED" ? var.dynamodb_table_write_capacity : null
-  stream_enabled              = var.dynamodb_table_stream_enabled
-  stream_view_type            = var.dynamodb_table_stream_view_type
-  table_class                 = var.dynamodb_table_table_class
-  deletion_protection_enabled = var.dynamodb_table_deletion_protection_enabled
-  restore_date_time           = var.dynamodb_table_restore_date_time
-  restore_source_name         = var.dynamodb_table_restore_source_name
-  restore_source_table_arn    = var.dynamodb_table_restore_source_table_arn
-  restore_to_latest_time      = var.dynamodb_table_restore_to_latest_time
+  billing_mode                = var.dynamodb_billing_mode
+  hash_key                    = var.dynamodb_hash_key
+  range_key                   = var.dynamodb_range_key
+  read_capacity               = var.dynamodb_billing_mode == "PROVISIONED" ? var.dynamodb_read_capacity : null
+  write_capacity              = var.dynamodb_billing_mode == "PROVISIONED" ? var.dynamodb_write_capacity : null
+  stream_enabled              = var.dynamodb_stream_enabled
+  stream_view_type            = var.dynamodb_stream_view_type
+  table_class                 = var.dynamodb_table_class
+  deletion_protection_enabled = var.dynamodb_deletion_protection_enabled
+  restore_date_time           = var.dynamodb_restore_date_time
+  restore_source_name         = var.dynamodb_restore_source_name
+  restore_source_table_arn    = var.dynamodb_restore_source_table_arn
+  restore_to_latest_time      = var.dynamodb_restore_to_latest_time
   dynamic "attribute" {
-    for_each = var.dynamodb_table_attributes
+    for_each = var.dynamodb_attributes
     content {
       name = attribute.key
       type = attribute.value
     }
   }
   dynamic "ttl" {
-    for_each = var.dynamodb_table_ttl_attribute_name != null ? [true] : []
+    for_each = var.dynamodb_ttl_attribute_name != null ? [true] : []
     content {
       enabled        = true
-      attribute_name = var.dynamodb_table_ttl_attribute_name
+      attribute_name = var.dynamodb_ttl_attribute_name
     }
   }
   point_in_time_recovery {
-    enabled = var.dynamodb_table_point_in_time_recovery_enabled
+    enabled = var.dynamodb_point_in_time_recovery_enabled
   }
   dynamic "local_secondary_index" {
-    for_each = var.dynamodb_table_local_secondary_indexes
+    for_each = var.dynamodb_local_secondary_indexes
     content {
       name               = local_secondary_index.key
       range_key          = local_secondary_index.value.range_key
@@ -42,7 +42,7 @@ resource "aws_dynamodb_table" "db" {
     }
   }
   dynamic "global_secondary_index" {
-    for_each = var.dynamodb_table_global_secondary_indexes
+    for_each = var.dynamodb_global_secondary_indexes
     content {
       name               = global_secondary_index.key
       hash_key           = global_secondary_index.value.hash_key
@@ -61,7 +61,7 @@ resource "aws_dynamodb_table" "db" {
     }
   }
   dynamic "replica" {
-    for_each = var.dynamodb_table_replica_regions
+    for_each = var.dynamodb_replica_regions
     content {
       region_name            = replica.value.region_name
       kms_key_arn            = lookup(replica.value, "kms_key_arn", null)
@@ -77,7 +77,7 @@ resource "aws_dynamodb_table" "db" {
     }
   }
   dynamic "import_table" {
-    for_each = var.dynamodb_table_import_table
+    for_each = var.dynamodb_import_table
     content {
       input_format           = import_table.value.input_format
       input_compression_type = lookup(import_table.value, "input_compression_type", null)
@@ -98,10 +98,10 @@ resource "aws_dynamodb_table" "db" {
     }
   }
   dynamic "on_demand_throughput" {
-    for_each = var.dynamodb_table_on_demand_throughput_max_read_request_units != null || var.dynamodb_table_on_demand_throughput_max_write_request_units != null ? [true] : []
+    for_each = var.dynamodb_on_demand_throughput_max_read_request_units != null || var.dynamodb_on_demand_throughput_max_write_request_units != null ? [true] : []
     content {
-      max_read_request_units  = var.dynamodb_table_on_demand_throughput_max_read_request_units
-      max_write_request_units = var.dynamodb_table_on_demand_throughput_max_write_request_units
+      max_read_request_units  = var.dynamodb_on_demand_throughput_max_read_request_units
+      max_write_request_units = var.dynamodb_on_demand_throughput_max_write_request_units
     }
   }
   tags = {
