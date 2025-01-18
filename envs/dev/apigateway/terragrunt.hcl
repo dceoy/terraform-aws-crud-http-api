@@ -25,9 +25,9 @@ dependency "lambda" {
 }
 
 inputs = {
-  kms_key_arn                                    = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
-  dynamodb_handler_lambda_function_qualified_arn = dependency.lambda.outputs.lambda_function_qualified_arns["dynamodb-handler"]
-  dynamodb_handler_lambda_function_invoke_arn    = dependency.lambda.outputs.lambda_function_invoke_arns["dynamodb-handler"]
+  kms_key_arn                   = include.root.inputs.create_kms_key ? dependency.kms.outputs.kms_key_arn : null
+  lambda_function_qualified_arn = dependency.lambda.outputs.lambda_function_qualified_arns["dynamodb-handler"]
+  lambda_function_invoke_arn    = dependency.lambda.outputs.lambda_function_invoke_arns["dynamodb-handler"]
 }
 
 terraform {

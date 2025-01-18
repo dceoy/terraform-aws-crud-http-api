@@ -1,6 +1,6 @@
 resource "aws_apigatewayv2_api" "http" {
   name          = "${var.system_name}-${var.env_type}-http-api-gateway"
-  description   = "${var.system_name}-${var.env_type}-http-api-gateway"
+  description   = "HTTP API Gateway for ${local.lambda_function_name}"
   protocol_type = "HTTP"
   tags = {
     Name       = "${var.system_name}-${var.env_type}-http-api-gateway"
@@ -13,11 +13,12 @@ resource "aws_apigatewayv2_integration" "http" {
   api_id                 = aws_apigatewayv2_api.http.id
   integration_type       = "AWS_PROXY"
   integration_method     = "POST"
-  integration_uri        = var.dynamodb_handler_lambda_function_qualified_arn
+  integration_uri        = var.lambda_function_qualified_arn
   payload_format_version = "2.0"
 }
 
 resource "aws_lambda_permission" "http" {
+  statement_id  = var.lambda_permission_statement_id
   action        = "lambda:InvokeFunction"
   function_name = local.lambda_function_name
   qualifier     = local.lambda_function_version

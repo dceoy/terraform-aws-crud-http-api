@@ -26,12 +26,18 @@ variable "kms_key_arn" {
   default     = null
 }
 
-variable "dynamodb_handler_lambda_function_qualified_arn" {
+variable "lambda_function_qualified_arn" {
   description = "Lambda function qualified ARN of the DynamoDB handler"
   type        = string
 }
 
-variable "dynamodb_handler_lambda_function_invoke_arn" {
+variable "lambda_function_invoke_arn" {
   description = "Lambda function invoke ARN of the DynamoDB handler"
   type        = string
+}
+
+variable "lambda_permission_statement_id" {
+  description = "Unique statement identifier for the Lambda permission"
+  type        = string
+  default     = null
 }
