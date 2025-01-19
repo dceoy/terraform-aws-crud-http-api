@@ -38,6 +38,9 @@ resource "aws_apigatewayv2_integration" "http" {
       server_name_to_verify = var.apigateway_integration_tls_config_server_name_to_verify
     }
   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_route" "get_all_items" {
@@ -88,6 +91,9 @@ resource "aws_lambda_permission" "http" {
   principal           = "apigateway.amazonaws.com"
   principal_org_id    = var.lambda_permission_principal_org_id
   source_arn          = "${aws_apigatewayv2_api.http.execution_arn}/*"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # trivy:ignore:avd-aws-0017
