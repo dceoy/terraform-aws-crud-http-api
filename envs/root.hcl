@@ -89,21 +89,19 @@ inputs = {
   docker_image_build_build_args = {
     dynamodb-handler = {}
   }
-  docker_image_build_platform             = local.docker_image_build_platforms[local.lambda_architecture]
-  docker_image_primary_tag                = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
-  docker_host                             = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
-  dynamodb_name                           = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-crud-dynamodb-table"
-  dynamodb_hash_key                       = "id"
-  dynamodb_billing_mode                   = "PAY_PER_REQUEST"
-  dynamodb_point_in_time_recovery_enabled = false
-  dynamodb_table_class                    = "STANDARD"
-  lambda_architectures                    = [local.lambda_architecture]
-  lambda_memory_sizes = {
-    dynamodb-handler = 128
-  }
-  lambda_ephemeral_storage_sizes = {
-    dynamodb-handler = 512
-  }
+  docker_image_build_platform                 = local.docker_image_build_platforms[local.lambda_architecture]
+  docker_image_primary_tag                    = get_env("DOCKER_PRIMARY_TAG", format("sha-%s", run_cmd("--terragrunt-quiet", "git", "rev-parse", "--short", "HEAD")))
+  docker_host                                 = get_env("DOCKER_HOST", "unix:///var/run/docker.sock")
+  dynamodb_name                               = "${local.env_vars.locals.system_name}-${local.env_vars.locals.env_type}-crud-dynamodb-table"
+  dynamodb_billing_mode                       = "PAY_PER_REQUEST"
+  dynamodb_hash_key                           = "id"
+  dynamodb_stream_enabled                     = false
+  dynamodb_table_class                        = "STANDARD"
+  dynamodb_attributes                         = { id = "S" }
+  dynamodb_point_in_time_recovery_enabled     = false
+  lambda_architectures                        = [local.lambda_architecture]
+  lambda_memory_sizes                         = { dynamodb-handler = 128 }
+  lambda_ephemeral_storage_sizes              = { dynamodb-handler = 512 }
   lambda_image_config_entry_points            = {}
   lambda_image_config_commands                = {}
   lambda_image_config_working_directories     = {}

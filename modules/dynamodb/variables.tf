@@ -117,8 +117,8 @@ variable "dynamodb_attributes" {
   type        = map(string)
   default     = { "id" = "S" }
   validation {
-    condition     = alltrue([for v in values(var.dynamodb_attributes) : contains(["S", "N", "B"], v)])
-    error_message = "Attribute type must be S, N, or B"
+    condition     = length(var.dynamodb_attributes) > 0 && alltrue([for v in values(var.dynamodb_attributes) : contains(["S", "N", "B"], v)])
+    error_message = "Attributes must have at least one element and type must be S, N, or B"
   }
 }
 
