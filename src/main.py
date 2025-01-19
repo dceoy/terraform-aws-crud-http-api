@@ -4,14 +4,21 @@ import json
 import os
 from decimal import Decimal
 from functools import cache
+from http import HTTPStatus
 from typing import Any
 
 import boto3
 from aws_lambda_powertools import Logger, Tracer
-from aws_lambda_powertools.event_handler.api_gateway import (
+from aws_lambda_powertools.event_handler import (
     APIGatewayHttpResolver,
     Response,
+    content_types,
 )
+from aws_lambda_powertools.event_handler.exceptions import (
+    BadRequestError,
+    NotFoundError,
+)
+from aws_lambda_powertools.logging import correlation_paths
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 logger = Logger()
@@ -27,8 +34,7 @@ def _instantiate_dynamodb_table() -> Any:
         Any: DynamoDB Table resource.
 
     """
-    table_name = os.environ.get("DYNAMODB_TABLE_NAME", "http-crud-tutorial-items")
-    return boto3.resource("dynamodb").Table(table_name)
+    return boto3.resource("dynamodb").Table(os.environ["DYNAMODB_TABLE_NAME"])
 
 
 @app.delete("/items/<item_id>")
@@ -47,8 +53,8 @@ def delete_item(item_id: str) -> Response:
     table = _instantiate_dynamodb_table()
     table.delete_item(Key={"id": item_id})
     return Response(
-        status_code=200,
-        content_type="application/json",
+        status_code=HTTPStatus.OK.value,  # 200
+        content_type=content_types.APPLICATION_JSON,  # application/json
         body=json.dumps({"message": f"Deleted item {item_id}"}),
     )
 
@@ -71,11 +77,7 @@ def get_item(item_id: str) -> Response:
     result = table.get_item(Key={"id": item_id})
     item = result.get("Item")
     if not item:
-        return Response(
-            status_code=404,
-            content_type="application/json",
-            body=json.dumps({"message": f"Item {item_id} not found"}),
-        )
+        raise NotFoundError(f"Item {item_id} not found")
     else:
         response_body = {
             "id": item["id"],
@@ -83,8 +85,8 @@ def get_item(item_id: str) -> Response:
             "price": float(item["price"]),
         }
         return Response(
-            status_code=200,
-            content_type="application/json",
+            status_code=HTTPStatus.OK.value,  # 200
+            content_type=content_types.APPLICATION_JSON,  # application/json
             body=json.dumps(response_body),
         )
 
@@ -107,7 +109,9 @@ def get_all_items() -> Response:
         for item in items
     ]
     return Response(
-        status_code=200, content_type="application/json", body=json.dumps(response_body)
+        status_code=HTTPStatus.OK.value,  # 200
+        content_type=content_types.APPLICATION_JSON,  # application/json
+        body=json.dumps(response_body),
     )
 
 
@@ -125,14 +129,7 @@ def put_item() -> Response:
     """
     body = app.current_event.json_body
     if [k for k in ("id", "name", "price") if k not in body]:
-        logger.warning(
-            "Request body is missing one or more required fields: id, name, price"
-        )
-        return Response(
-            status_code=400,
-            content_type="application/json",
-            body=json.dumps({"message": "Missing required fields: id, name, price"}),
-        )
+        raise BadRequestError("Missing required fields: id, name, price")
     else:
         logger.info("Putting a new or updated item with id: %s", body["id"])
         table = _instantiate_dynamodb_table()
@@ -144,13 +141,15 @@ def put_item() -> Response:
             }
         )
         return Response(
-            status_code=200,
-            content_type="application/json",
+            status_code=HTTPStatus.OK.value,  # 200
+            content_type=content_types.APPLICATION_JSON,  # application/json
             body=json.dumps({"message": f"Put item {body['id']}"}),
         )
 
 
-@logger.inject_lambda_context(log_event=True)
+@logger.inject_lambda_context(
+    correlation_id_path=correlation_paths.API_GATEWAY_HTTP, log_event=True
+)
 @tracer.capture_lambda_handler
 def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, Any]:
     """AWS Lambda function handler.
