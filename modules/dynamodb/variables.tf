@@ -118,7 +118,7 @@ variable "dynamodb_attributes" {
   default     = { "id" = "S" }
   validation {
     condition     = length(var.dynamodb_attributes) > 0 && alltrue([for v in values(var.dynamodb_attributes) : contains(["S", "N", "B"], v)])
-    error_message = "Attributes must have at least one element and type must be S, N, or B"
+    error_message = "DynamoDB attributes must be a non-empty map with values of either S, N, or B"
   }
 }
 
@@ -140,7 +140,7 @@ variable "dynamodb_local_secondary_indexes" {
   default     = {}
   validation {
     condition     = alltrue([for m in values(var.dynamodb_local_secondary_indexes) : alltrue([for k in keys(m) : contains(["range_key", "projection_type", "non_key_attributes"], k)])])
-    error_message = "Local secondary index allow only range_key, projection_type, and non_key_attributes as keys"
+    error_message = "Local secondary indexes' map values allow only range_key, projection_type, and non_key_attributes as keys"
   }
 }
 
@@ -149,8 +149,8 @@ variable "dynamodb_global_secondary_indexes" {
   type        = map(map(any))
   default     = {}
   validation {
-    condition     = alltrue([for m in var.dynamodb_global_secondary_indexes : alltrue([for k in keys(m) : contains(["hash_key", "projection_type", "range_key", "read_capacity", "write_capacity", "non_key_attributes", "on_demand_throughput_max_read_request_units", "on_demand_throughput_max_write_request_units"], k)])])
-    error_message = "Global secondary index allow only hash_key, projection_type, range_key, read_capacity, write_capacity, non_key_attributes, on_demand_throughput_max_read_request_units, and on_demand_throughput_max_write_request_units as keys"
+    condition     = alltrue([for m in values(var.dynamodb_global_secondary_indexes) : alltrue([for k in keys(m) : contains(["hash_key", "projection_type", "range_key", "read_capacity", "write_capacity", "non_key_attributes", "on_demand_throughput_max_read_request_units", "on_demand_throughput_max_write_request_units"], k)])])
+    error_message = "Global secondary indexes' map values allow only hash_key, projection_type, range_key, read_capacity, write_capacity, non_key_attributes, on_demand_throughput_max_read_request_units, and on_demand_throughput_max_write_request_units as keys"
   }
 }
 
@@ -160,7 +160,7 @@ variable "dynamodb_replica_regions" {
   default     = {}
   validation {
     condition     = alltrue([for m in var.dynamodb_replica_regions : alltrue([for k in keys(m) : contains(["kms_key_arn", "propagate_tags", "point_in_time_recovery"], k)])])
-    error_message = "Replica regions allow only kms_key_arn, propagate_tags, and point_in_time_recovery as keys"
+    error_message = "Replica regions' map values allow only kms_key_arn, propagate_tags, and point_in_time_recovery as keys"
   }
 }
 
@@ -169,8 +169,8 @@ variable "dynamodb_import_table" {
   type        = map(string)
   default     = {}
   validation {
-    condition     = alltrue([for k, v in var.dynamodb_import_table : contains(["input_format", "input_compression_type", "s3_bucket_source_bucket", "s3_bucket_source_bucket_owner", "s3_bucket_source_key_prefix", "input_format_options_csv_delimiter", "input_format_options_csv_header_list"], k)])
-    error_message = "Import table allow only input_format, input_compression_type, s3_bucket_source_bucket, s3_bucket_source_bucket_owner, s3_bucket_source_key_prefix, input_format_options_csv_delimiter, and input_format_options_csv_header_list as keys"
+    condition     = alltrue([for k in keys(var.dynamodb_import_table) : contains(["input_format", "input_compression_type", "s3_bucket_source_bucket", "s3_bucket_source_bucket_owner", "s3_bucket_source_key_prefix", "input_format_options_csv_delimiter", "input_format_options_csv_header_list"], k)])
+    error_message = "Import table allows only input_format, input_compression_type, s3_bucket_source_bucket, s3_bucket_source_bucket_owner, s3_bucket_source_key_prefix, input_format_options_csv_delimiter, and input_format_options_csv_header_list as keys"
   }
 }
 

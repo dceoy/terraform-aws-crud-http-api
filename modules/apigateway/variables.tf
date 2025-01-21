@@ -145,6 +145,6 @@ variable "apigateway_stage_route_settings" {
   default     = {}
   validation {
     condition     = alltrue([for m in values(var.apigateway_stage_route_settings) : alltrue([for k in keys(m) : contains(["detailed_metrics_enabled", "throttling_burst_limit", "throttling_rate_limit"], k)])])
-    error_message = "API Gateway stage route settings allow only detailed_metrics_enabled, throttling_burst_limit and throttling_rate_limit as keys"
+    error_message = "API Gateway stage route settings' map values allow only detailed_metrics_enabled, throttling_burst_limit and throttling_rate_limit as keys"
   }
 }
