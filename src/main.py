@@ -2,8 +2,6 @@
 
 import json
 import os
-from decimal import Decimal
-from functools import cache
 from http import HTTPStatus
 from typing import Any
 
@@ -24,17 +22,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 logger = Logger()
 tracer = Tracer()
 app = APIGatewayHttpResolver()
-
-
-@cache
-def _instantiate_dynamodb_table() -> Any:
-    """Instantiate a DynamoDB table resource.
-
-    Returns:
-        Any: DynamoDB Table resource.
-
-    """
-    return boto3.resource("dynamodb").Table(os.environ["DYNAMODB_TABLE_NAME"])
+dynamodb = boto3.client("dynamodb")
 
 
 @app.delete("/items/<item_id>")
@@ -47,14 +35,17 @@ def delete_item(item_id: str) -> Response:
 
     Returns:
         Response: A JSON response indicating whether the item was successfully deleted.
-
     """
     logger.info("Deleting item with id: %s", item_id)
-    table = _instantiate_dynamodb_table()
-    table.delete_item(Key={"id": item_id})
+    dynamodb.delete_item(
+        TableName=os.environ["DYNAMODB_TABLE_NAME"],
+        Key={
+            "id": {"S": item_id},
+        },
+    )
     return Response(
-        status_code=HTTPStatus.OK.value,  # 200
-        content_type=content_types.APPLICATION_JSON,  # application/json
+        status_code=HTTPStatus.OK.value,                # 200
+        content_type=content_types.APPLICATION_JSON,    # application/json
         body=json.dumps({"message": f"Deleted item {item_id}"}),
     )
 
@@ -70,22 +61,25 @@ def get_item(item_id: str) -> Response:
     Returns:
         Response: A JSON response containing the item data if found,
         otherwise a 404 Not Found response.
-
     """
     logger.info("Fetching item with id: %s", item_id)
-    table = _instantiate_dynamodb_table()
-    result = table.get_item(Key={"id": item_id})
+    result = dynamodb.get_item(
+        TableName=os.environ["DYNAMODB_TABLE_NAME"],
+        Key={
+            "id": {"S": item_id},
+        },
+    )
     item = result.get("Item")
     if not item:
         raise NotFoundError(f"Item {item_id} not found")
     else:
         response_body = {
-            "id": item["id"],
-            "name": item["name"],
-            "price": float(item["price"]),
+            "id": item["id"]["S"],
+            "name": item["name"]["S"],
+            "price": float(item["price"]["N"]),
         }
         return Response(
-            status_code=HTTPStatus.OK.value,  # 200
+            status_code=HTTPStatus.OK.value,              # 200
             content_type=content_types.APPLICATION_JSON,  # application/json
             body=json.dumps(response_body),
         )
@@ -98,19 +92,21 @@ def get_all_items() -> Response:
 
     Returns:
         Response: A JSON response containing a list of all items in the table.
-
     """
     logger.info("Fetching all items")
-    table = _instantiate_dynamodb_table()
-    result = table.scan()
+    result = dynamodb.scan(TableName=os.environ["DYNAMODB_TABLE_NAME"])
     items = result.get("Items", [])
     response_body = [
-        {"id": item["id"], "name": item["name"], "price": float(item["price"])}
-        for item in items
+        {
+            "id": i["id"]["S"],
+            "name": i["name"]["S"],
+            "price": float(i["price"]["N"]),
+        }
+        for i in items
     ]
     return Response(
-        status_code=HTTPStatus.OK.value,  # 200
-        content_type=content_types.APPLICATION_JSON,  # application/json
+        status_code=HTTPStatus.OK.value,                # 200
+        content_type=content_types.APPLICATION_JSON,    # application/json
         body=json.dumps(response_body),
     )
 
@@ -125,24 +121,23 @@ def put_item() -> Response:
 
     Returns:
         Response: A JSON response with a success message, or a 400 Bad Request.
-
     """
     body = app.current_event.json_body
-    if [k for k in ("id", "name", "price") if k not in body]:
+    if any((k not in body) for k in ("id", "name", "price")):
         raise BadRequestError("Missing required fields: id, name, price")
     else:
         logger.info("Putting a new or updated item with id: %s", body["id"])
-        table = _instantiate_dynamodb_table()
-        table.put_item(
+        dynamodb.put_item(
+            TableName=os.environ["DYNAMODB_TABLE_NAME"],
             Item={
-                "id": body["id"],
-                "name": body["name"],
-                "price": Decimal(str(body["price"])),
-            }
+                "id": {"S": body["id"]},
+                "name": {"S": body["name"]},
+                "price": {"N": str(body["price"])},
+            },
         )
         return Response(
-            status_code=HTTPStatus.OK.value,  # 200
-            content_type=content_types.APPLICATION_JSON,  # application/json
+            status_code=HTTPStatus.OK.value,                # 200
+            content_type=content_types.APPLICATION_JSON,    # application/json
             body=json.dumps({"message": f"Put item {body['id']}"}),
         )
 
@@ -163,7 +158,6 @@ def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, A
 
     Returns:
         dict[str, Any]: A dictionary representing the API Gateway response.
-
     """
     logger.info("Event received")
     return app.resolve(event, context)

@@ -16,7 +16,7 @@ variable "kms_key_arn" {
   default     = null
 }
 
-variable "dynamodb_name" {
+variable "dynamodb_table_name" {
   description = "Name of the DynamoDB table"
   type        = string
   default     = null
