@@ -1,2 +1,0 @@
-aws-lambda-powertools[tracer] >= 3.4.1
-boto3 >= 1.36.2

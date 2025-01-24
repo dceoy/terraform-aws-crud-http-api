@@ -10,7 +10,8 @@ cd "$(dirname "${0}")"
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 AWS_REGION="$(aws configure get region)"
 GIT_SHA="$(git rev-parse --short HEAD)"
+REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+TAG="sha-${GIT_SHA}"
 
-REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com" TAG="sha-${GIT_SHA}" \
-  docker buildx bake --pull --load --provenance=false \
-  && docker buildx bake --print | jq -r '.target[].tags[]'
+REGISTRY="${REGISTRY}" TAG="${TAG}" docker buildx bake --pull --load --provenance=false
+REGISTRY="${REGISTRY}" TAG="${TAG}" docker buildx bake --print | jq -r '.target[].tags[]'
