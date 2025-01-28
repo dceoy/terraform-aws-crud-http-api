@@ -76,7 +76,9 @@ def get_item(item_id: str) -> Response[str]:
     )
     item = result.get("Item")
     if not item:
-        raise NotFoundError(f"Item {item_id} not found")
+        error_message = f"Item {item_id} not found"
+        logger.error(error_message)
+        raise NotFoundError(error_message)
     else:
         response_body = {
             "id": item["id"]["S"],
@@ -134,7 +136,9 @@ def put_item() -> Response[str]:
     """
     body = app.current_event.json_body
     if any((k not in body) for k in ("id", "name", "price")):
-        raise BadRequestError("Missing required fields: id, name, price")
+        error_message = "Missing required fields: id, name, price"
+        logger.error(error_message)
+        raise BadRequestError(error_message)
     else:
         logger.info("Putting a new or updated item with id: %s", body["id"])
         dynamodb.put_item(
