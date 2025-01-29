@@ -158,7 +158,10 @@ resource "aws_iam_role_policy" "db" {
             "dynamodb:Scan",
             "dynamodb:UpdateItem"
           ]
-          Resource = ["arn:aws:dynamodb:${local.region}:${local.account_id}:table/*"]
+          Resource = [
+            "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*",
+            "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*/index/*"
+          ]
           Condition = {
             StringEquals = {
               "aws:ResourceTag/SystemName" = var.system_name

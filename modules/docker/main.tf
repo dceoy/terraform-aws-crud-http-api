@@ -36,7 +36,7 @@ resource "docker_registry_image" "primary" {
 }
 
 resource "docker_registry_image" "secondary" {
-  depends_on    = [docker_registry_image.primary]
+  depends_on    = [docker_tag.secondary, docker_registry_image.primary]
   for_each      = local.docker_image_secondary_tag_sources
   name          = each.key
   keep_remotely = true
