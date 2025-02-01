@@ -99,6 +99,8 @@ inputs = {
   dynamodb_table_class                        = "STANDARD"
   dynamodb_attributes                         = { id = "S" }
   dynamodb_point_in_time_recovery_enabled     = false
+  cloudwatch_logs_retention_in_days           = 30
+  iam_role_force_detach_policies              = true
   lambda_architectures                        = [local.lambda_architecture]
   lambda_memory_sizes                         = { dynamodb-handler = 128 }
   lambda_ephemeral_storage_sizes              = { dynamodb-handler = 512 }
