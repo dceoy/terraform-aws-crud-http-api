@@ -28,8 +28,8 @@ group "default" {
 
 target "dynamodb-handler" {
   tags       = ["${REGISTRY}/dynamodb-handler:${TAG}"]
-  context    = "./src"
-  dockerfile = "Dockerfile"
+  context    = "."
+  dockerfile = "src/Dockerfile"
   target     = "app"
   platforms  = ["linux/arm64"]
   args = {

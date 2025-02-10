@@ -62,7 +62,7 @@ RUN \
 
 RUN \
       --mount=type=bind,source=.,target=/mnt/host \
-      cp /mnt/host/main.py "${LAMBDA_TASK_ROOT}/"
+      cp /mnt/host/src/main.py "${LAMBDA_TASK_ROOT}/"
 
 HEALTHCHECK NONE
 
