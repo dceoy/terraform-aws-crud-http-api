@@ -34,7 +34,7 @@ resource "aws_iam_role_policy_attachments_exclusive" "logs" {
 
 resource "aws_iam_role_policy" "kms" {
   count = var.kms_key_arn != null ? 1 : 0
-  name  = "${var.system_name}-${var.env_type}-apigateway-account-iam-role-policy"
+  name  = "${var.system_name}-${var.env_type}-apigateway-account-kms-iam-policy"
   role  = aws_iam_role.apigateway.id
   policy = jsonencode({
     Version = "2012-10-17"
