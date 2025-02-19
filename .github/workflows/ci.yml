@@ -59,7 +59,7 @@ jobs:
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-test')
     uses: dceoy/gh-actions-for-devops/.github/workflows/python-package-lint-and-scan.yml@main
     with:
-      package-path: ./src
+      package-path: .
       python-version: 3.13
   dependabot-auto-merge:
     if: >
