@@ -18,12 +18,6 @@ resource "aws_lambda_function" "functions" {
   tracing_config {
     mode = var.lambda_tracing_config_mode
   }
-  dynamic "environment" {
-    for_each = lookup(var.lambda_environment_variables, each.key, null) != null ? [true] : []
-    content {
-      variables = lookup(var.lambda_environment_variables, each.key, null)
-    }
-  }
   dynamic "ephemeral_storage" {
     for_each = lookup(var.lambda_ephemeral_storage_sizes, each.key, null) != null ? [true] : []
     content {
@@ -36,6 +30,20 @@ resource "aws_lambda_function" "functions" {
       entry_point       = lookup(var.lambda_image_config_entry_points, each.key, null)
       command           = lookup(var.lambda_image_config_commands, each.key, null)
       working_directory = lookup(var.lambda_image_config_working_directories, each.key, null)
+    }
+  }
+  dynamic "environment" {
+    for_each = lookup(var.lambda_environment_variables, each.key, null) != null ? [true] : []
+    content {
+      variables = lookup(var.lambda_environment_variables, each.key, null)
+    }
+  }
+  dynamic "vpc_config" {
+    for_each = length(var.lambda_vpc_config_subnet_ids) > 0 && length(var.lambda_vpc_config_security_group_ids) > 0 ? [true] : []
+    content {
+      subnet_ids                  = var.lambda_vpc_config_subnet_ids
+      security_group_ids          = var.lambda_vpc_config_security_group_ids
+      ipv6_allowed_for_dual_stack = var.lambda_vpc_config_ipv6_allowed_for_dual_stack
     }
   }
   tags = {

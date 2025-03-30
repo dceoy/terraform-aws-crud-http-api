@@ -38,6 +38,7 @@ target "dynamodb-handler" {
     USER_GID       = USER_GID
     USER_NAME      = USER_NAME
   }
+  secret     = []
   cache_from = ["type=gha"]
   cache_to   = ["type=gha,mode=max"]
   pull       = true

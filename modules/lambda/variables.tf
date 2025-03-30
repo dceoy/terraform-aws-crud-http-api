@@ -146,6 +146,24 @@ variable "lambda_tracing_config_mode" {
   }
 }
 
+variable "lambda_vpc_config_subnet_ids" {
+  description = "List of subnet IDs associated with the Lambda function within the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "lambda_vpc_config_security_group_ids" {
+  description = "List of security group IDs associated with the Lambda function within the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "lambda_vpc_config_ipv6_allowed_for_dual_stack" {
+  description = "Whether to allow outbound IPv6 traffic on VPC Lambda functions that are connected to dual-stack subnets"
+  type        = bool
+  default     = false
+}
+
 variable "lambda_provisioned_concurrent_executions" {
   description = "Lambda provisioned concurrent executions"
   type        = number
