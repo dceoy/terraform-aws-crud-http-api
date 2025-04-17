@@ -24,7 +24,8 @@ dependency "docker" {
 dependency "dynamodb" {
   config_path = "../dynamodb"
   mock_outputs = {
-    dynamodb_table_id = "dynamodb-table-id"
+    dynamodb_table_id                       = "dynamodb-table-id"
+    dynamodb_table_operation_iam_policy_arn = "arn:aws:iam::123456789012:policy/dynamodb-table-operation-iam-policy"
   }
   mock_outputs_merge_strategy_with_state = "shallow"
 }
@@ -39,6 +40,7 @@ inputs = {
       ENV_TYPE            = include.root.inputs.env_type
     }
   }
+  lambda_iam_role_policy_arns = [dependency.dynamodb.outputs.dynamodb_table_operation_iam_policy_arn]
 }
 
 terraform {

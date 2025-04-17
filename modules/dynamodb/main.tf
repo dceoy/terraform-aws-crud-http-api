@@ -113,3 +113,52 @@ resource "aws_dynamodb_table" "db" {
     ignore_changes = [global_secondary_index, read_capacity, write_capacity]
   }
 }
+
+resource "aws_iam_policy" "db" {
+  name        = "${var.system_name}-${var.env_type}-dynamodb-table-operation-iam-policy"
+  description = "DynamoDB table operation IAM policy for ${aws_dynamodb_table.db.name}"
+  path        = "/"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = concat(
+      [
+        {
+          Sid    = "AllowDynamoDBAccess"
+          Effect = "Allow"
+          Action = [
+            "dynamodb:DeleteItem",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:UpdateItem"
+          ]
+          Resource = [
+            aws_dynamodb_table.db.arn,
+            "${aws_dynamodb_table.db.arn}/index/*"
+          ]
+          Condition = {
+            StringEquals = {
+              "aws:ResourceTag/SystemName" = var.system_name
+              "aws:ResourceTag/EnvType"    = var.env_type
+            }
+          }
+        }
+      ],
+      (
+        var.kms_key_arn != null ? [
+          {
+            Sid    = "AllowKMSAccess"
+            Effect = "Allow"
+            Action = [
+              "kms:Decrypt",
+              "kms:Encrypt",
+              "kms:GenerateDataKey"
+            ]
+            Resource = [var.kms_key_arn]
+          }
+        ] : []
+      )
+    )
+  })
+}

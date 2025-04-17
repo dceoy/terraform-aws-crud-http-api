@@ -17,3 +17,8 @@ output "dynamodb_table_stream_label" {
   description = "Timestamp in ISO 8601 format of the DynamoDB table Stream"
   value       = aws_dynamodb_table.db.stream_label
 }
+
+output "dynamodb_table_operation_iam_policy_arn" {
+  description = "DynamoDB table operation IAM policy ARN"
+  value       = aws_iam_policy.db.arn
+}

@@ -173,3 +173,9 @@ variable "lambda_provisioned_concurrent_executions" {
     error_message = "Lambda provisioned concurrent executions must be -1 or greater"
   }
 }
+
+variable "lambda_iam_role_policy_arns" {
+  description = "List of IAM role policy ARNs to attach to the Lambda function"
+  type        = list(string)
+  default     = []
+}

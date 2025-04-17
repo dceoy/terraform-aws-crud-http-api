@@ -102,10 +102,13 @@ resource "aws_iam_role" "functions" {
 resource "aws_iam_role_policy_attachments_exclusive" "functions" {
   for_each  = aws_iam_role.functions
   role_name = each.value.id
-  policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
-  ]
+  policy_arns = concat(
+    [
+      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+      "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+    ],
+    var.lambda_iam_role_policy_arns
+  )
 }
 
 resource "aws_iam_role_policy" "logs" {
@@ -139,55 +142,6 @@ resource "aws_iam_role_policy" "logs" {
             Sid      = "AllowKMSGenerateDataKey"
             Effect   = "Allow"
             Action   = ["kms:GenerateDataKey"]
-            Resource = [var.kms_key_arn]
-          }
-        ] : []
-      )
-    )
-  })
-}
-
-resource "aws_iam_role_policy" "db" {
-  for_each = aws_iam_role.functions
-  name     = "${var.system_name}-${var.env_type}-lambda-${each.key}-db-iam-policy"
-  role     = aws_iam_role.functions[each.key].id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = concat(
-      [
-        {
-          Sid    = "AllowDynamoDBAccess"
-          Effect = "Allow"
-          Action = [
-            "dynamodb:DeleteItem",
-            "dynamodb:GetItem",
-            "dynamodb:PutItem",
-            "dynamodb:Query",
-            "dynamodb:Scan",
-            "dynamodb:UpdateItem"
-          ]
-          Resource = [
-            "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*",
-            "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*/index/*"
-          ]
-          Condition = {
-            StringEquals = {
-              "aws:ResourceTag/SystemName" = var.system_name
-              "aws:ResourceTag/EnvType"    = var.env_type
-            }
-          }
-        }
-      ],
-      (
-        var.kms_key_arn != null ? [
-          {
-            Sid    = "AllowKMSAccess"
-            Effect = "Allow"
-            Action = [
-              "kms:Decrypt",
-              "kms:Encrypt",
-              "kms:GenerateDataKey"
-            ]
             Resource = [var.kms_key_arn]
           }
         ] : []
