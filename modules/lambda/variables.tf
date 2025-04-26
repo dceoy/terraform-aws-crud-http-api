@@ -164,6 +164,12 @@ variable "lambda_vpc_config_ipv6_allowed_for_dual_stack" {
   default     = false
 }
 
+variable "lambda_alias_name" {
+  description = "Alias name for the Lambda function"
+  type        = string
+  default     = null
+}
+
 variable "lambda_provisioned_concurrent_executions" {
   description = "Lambda provisioned concurrent executions"
   type        = number

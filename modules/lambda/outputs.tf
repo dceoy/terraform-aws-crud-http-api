@@ -18,6 +18,11 @@ output "lambda_function_invoke_arns" {
   value       = { for k, v in aws_lambda_function.functions : k => v.invoke_arn }
 }
 
+output "lambda_alias_invoke_arns" {
+  description = "Lambda alias invoke ARNs"
+  value       = { for k, v in aws_lambda_alias.functions : k => v.invoke_arn }
+}
+
 output "lambda_iam_role_arns" {
   description = "Lambda IAM role ARNs"
   value       = { for k, v in aws_iam_role.functions : k => v.arn }
