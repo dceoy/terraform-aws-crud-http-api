@@ -110,7 +110,7 @@ resource "aws_dynamodb_table" "db" {
     EnvType    = var.env_type
   }
   lifecycle {
-    ignore_changes = [global_secondary_index, read_capacity, write_capacity]
+    ignore_changes = [read_capacity, write_capacity]
   }
 }
 
