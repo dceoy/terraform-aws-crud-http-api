@@ -679,14 +679,14 @@ files = [
 
 [[package]]
 name = "types-jmespath"
-version = "1.0.2.20250529"
+version = "1.0.2.20250711"
 description = "Typing stubs for jmespath"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "types_jmespath-1.0.2.20250529-py3-none-any.whl", hash = "sha256:6344c102233aae954d623d285618079d797884e35f6cd8d2a894ca02640eca07"},
-    {file = "types_jmespath-1.0.2.20250529.tar.gz", hash = "sha256:d3c08397f57fe0510e3b1b02c27f0a5e738729680fb0ea5f4b74f70fb032c129"},
+    {file = "types_jmespath-1.0.2.20250711-py3-none-any.whl", hash = "sha256:588719e80182e04904299cf744e77f86c05eedf063e510e3f805c354c8cf989d"},
+    {file = "types_jmespath-1.0.2.20250711.tar.gz", hash = "sha256:5204d90fa95a968285496edd9daeeafa34e99a0642160b69ca73b6ca98a02af5"},
 ]
 
 [[package]]
