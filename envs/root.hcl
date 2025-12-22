@@ -111,7 +111,7 @@ inputs = {
   lambda_reserved_concurrent_executions       = -1
   lambda_logging_config_log_format            = "JSON"
   lambda_logging_config_application_log_level = "INFO"
-  lambda_logging_config_shadow_log_level      = "INFO"
+  lambda_logging_config_system_log_level      = "INFO"
   lambda_tracing_config_mode                  = "Active"
   lambda_provisioned_concurrent_executions    = -1
 }
