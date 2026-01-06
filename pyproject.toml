@@ -1,24 +1,28 @@
-[tool.poetry]
+[project]
 name = "dynamodb-handler"
 version = "0.0.1"
-package-mode = false
+requires-python = ">=3.13"
+dependencies = [
+  "aws-lambda-powertools[tracer]>=3.4.1,<4.0.0",
+  "boto3>=1.36.2,<2.0.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.13"
-aws-lambda-powertools = {extras = ["tracer"], version = "^3.4.1"}
-boto3 = "^1.36.2"
+[dependency-groups]
+dev = [
+  "ruff>=0.14.0,<0.15.0",
+  "pyright>=1.1.379,<1.2.0",
+  "types-aws-xray-sdk>=2.14.0.20240606,<2.15.0",
+  "types-jmespath>=1.0.2.20240106,<1.1.0",
+  "types-requests>=2.32.0.20241016,<2.33.0",
+  "boto3-stubs>=1.36.5,<2.0.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.14.0"
-pyright = "^1.1.379"
-types-aws-xray-sdk = "^2.14.0.20240606"
-types-jmespath = "^1.0.2.20240106"
-types-requests = "^2.32.0.20241016"
-boto3-stubs = "^1.36.5"
+[tool.uv]
+package = false
 
 [tool.ruff]
 line-length = 88
-exclude = ["build"]
+exclude = ["build", ".venv"]
 preview = true
 
 [tool.ruff.lint]
@@ -102,12 +106,11 @@ convention = "google"
 
 [tool.pyright]
 typeCheckingMode = "strict"
-exclude = ["build"]
-threads = 0
+exclude = ["build", ".venv"]
 reportUnknownMemberType = false
 reportUnknownVariableType = false
 reportUnknownArgumentType = false
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"

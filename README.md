@@ -1,12 +1,10 @@
-terraform-aws-crud-http-api
-===========================
+# terraform-aws-crud-http-api
 
 Terraform stacks for CRUD HTTP API using Amazon API Gateway
 
 [![CI/CD](https://github.com/dceoy/terraform-aws-crud-http-api/actions/workflows/ci.yml/badge.svg)](https://github.com/dceoy/terraform-aws-crud-http-api/actions/workflows/ci.yml)
 
-Installation
-------------
+## Installation
 
 1.  Check out the repository.
 
@@ -43,8 +41,7 @@ Installation
     $ terragrunt run-all apply --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive
     ```
 
-Cleanup
--------
+## Cleanup
 
 ```sh
 $ terragrunt run-all destroy --terragrunt-working-dir='envs/dev/' --terragrunt-non-interactive

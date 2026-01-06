@@ -22,11 +22,12 @@ RUN \
 RUN \
       --mount=type=cache,target=/root/.cache/pip \
       --mount=type=bind,source=.,target=/mnt/host \
-      /var/lang/bin/python -m pip install -U awslambdaric pip poetry poetry-plugin-export \
-      && /var/lang/bin/python -m poetry --directory=/mnt/host export \
-        --format=requirements.txt --output=/tmp/requirements.txt \
-      && /var/lang/bin/python -m pip uninstall -y poetry poetry-plugin-export \
-      && /var/lang/bin/python -m pip install -U -r /tmp/requirements.txt
+      /var/lang/bin/python -m pip install -U awslambdaric pip uv \
+      && cd /mnt/host \
+      && /var/lang/bin/uv export --frozen --locked --no-dev --format requirements.txt \
+        --output /tmp/requirements.txt \
+      && /var/lang/bin/uv pip install --python /var/lang/bin/python --system --no-cache \
+        -r /tmp/requirements.txt
 
 
 FROM public.ecr.aws/lambda/python:${PYTHON_VERSION} AS app
