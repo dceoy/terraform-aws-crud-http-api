@@ -28,7 +28,7 @@ jobs:
       ) || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     permissions:
       contents: write
-    uses: dceoy/gh-actions-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
     with:
       search-path: .
       terraform-version: latest
@@ -42,7 +42,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: dceoy/gh-actions-for-devops/.github/workflows/terraform-lock-files-upgrade-and-pr-merge.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/terraform-lock-files-upgrade-and-pr-merge.yml@main
     with:
       terragrunt-working-directories: envs/dev
       terraform-version: latest
@@ -59,7 +59,7 @@ jobs:
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-test')
     permissions:
       contents: read
-    uses: dceoy/gh-actions-for-devops/.github/workflows/python-package-lint-and-scan.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/python-package-lint-and-scan.yml@main
     with:
       package-path: .
       python-version: 3.x
@@ -75,7 +75,7 @@ jobs:
       contents: write
       pull-requests: write
       actions: read
-    uses: dceoy/gh-actions-for-devops/.github/workflows/dependabot-auto-merge.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
       unconditional: true
     secrets:
