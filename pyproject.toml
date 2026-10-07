@@ -30,7 +30,8 @@ select = ["ALL"]
 ignore = [
   "ANN",  # flake8-annotations (ANN)
   "FBT",  # flake8-boolean-trap (FBT)
-  "CPY",  # flake8-copyright (CPY)
+  # Keep copyright-header enforcement opt-in.
+  "CPY",
   "EXE",  # flake8-executable (EXE)
   "FA",  # flake8-future-annotations (FA)
   "RET",  # flake8-return (RET)
