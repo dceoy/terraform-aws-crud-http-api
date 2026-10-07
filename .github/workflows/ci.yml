@@ -40,8 +40,10 @@ jobs:
         && (startswith(github.head_ref, 'dependabot/terraform/') || startswith(github.head_ref, 'renovate/'))
       ) || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'upgrade')
     permissions:
+      actions: read
       contents: write
       pull-requests: write
+      security-events: write
     uses: dceoy/gha-for-devops/.github/workflows/terraform-lock-files-upgrade-and-pr-merge.yml@main
     with:
       terragrunt-working-directories: envs/dev
