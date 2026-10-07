@@ -1,8 +1,11 @@
 resource "aws_lambda_function" "functions" {
+  #checkov:skip=CKV_AWS_116:API Gateway invokes these functions synchronously; asynchronous dead-letter handling is not used.
+  #checkov:skip=CKV_AWS_272:These functions use container images, which do not support Lambda code signing.
   for_each                       = aws_iam_role.functions
   function_name                  = local.lambda_function_names[each.key]
   description                    = "Lambda function for ${each.key}"
   role                           = each.value.arn
+  kms_key_arn                    = var.kms_key_arn
   package_type                   = "Image"
   image_uri                      = var.lambda_image_uris[each.key]
   architectures                  = var.lambda_architectures
@@ -56,6 +59,7 @@ resource "aws_lambda_function" "functions" {
 
 # trivy:ignore:avd-aws-0017
 resource "aws_cloudwatch_log_group" "functions" {
+  #checkov:skip=CKV_AWS_338:Log retention is configurable; the example uses 30 days to limit storage costs.
   for_each          = local.lambda_function_names
   name              = "/${var.system_name}/${var.env_type}/lambda/${each.value}"
   retention_in_days = var.cloudwatch_logs_retention_in_days

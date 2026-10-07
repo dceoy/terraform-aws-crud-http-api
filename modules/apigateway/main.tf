@@ -44,6 +44,7 @@ resource "aws_apigatewayv2_integration" "http" {
 }
 
 resource "aws_apigatewayv2_route" "get_all_items" {
+  #checkov:skip=CKV_AWS_309:Public access is the CRUD API default; callers can set an authorization type when protection is required.
   operation_name       = "GetAllItems"
   api_id               = aws_apigatewayv2_api.http.id
   route_key            = "GET /items"
@@ -54,6 +55,7 @@ resource "aws_apigatewayv2_route" "get_all_items" {
 }
 
 resource "aws_apigatewayv2_route" "get_an_item" {
+  #checkov:skip=CKV_AWS_309:Public access is the CRUD API default; callers can set an authorization type when protection is required.
   operation_name       = "GetAnItem"
   api_id               = aws_apigatewayv2_api.http.id
   route_key            = "GET /items/{id}"
@@ -64,6 +66,7 @@ resource "aws_apigatewayv2_route" "get_an_item" {
 }
 
 resource "aws_apigatewayv2_route" "delete_an_item" {
+  #checkov:skip=CKV_AWS_309:Public access is the CRUD API default; callers can set an authorization type when protection is required.
   operation_name       = "DeleteAnItem"
   api_id               = aws_apigatewayv2_api.http.id
   route_key            = "DELETE /items/{id}"
@@ -74,6 +77,7 @@ resource "aws_apigatewayv2_route" "delete_an_item" {
 }
 
 resource "aws_apigatewayv2_route" "create_or_update_an_item" {
+  #checkov:skip=CKV_AWS_309:Public access is the CRUD API default; callers can set an authorization type when protection is required.
   operation_name       = "CreateOrUpdateAnItem"
   api_id               = aws_apigatewayv2_api.http.id
   route_key            = "PUT /items"
@@ -98,6 +102,7 @@ resource "aws_lambda_permission" "http" {
 
 # trivy:ignore:avd-aws-0017
 resource "aws_cloudwatch_log_group" "http" {
+  #checkov:skip=CKV_AWS_338:Log retention is configurable; the example uses 30 days to limit storage costs.
   name              = "/${var.system_name}/${var.env_type}/apigateway/${aws_apigatewayv2_api.http.id}"
   retention_in_days = var.cloudwatch_logs_retention_in_days
   kms_key_id        = var.kms_key_arn

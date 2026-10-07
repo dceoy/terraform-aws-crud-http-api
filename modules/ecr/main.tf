@@ -1,6 +1,8 @@
 # trivy:ignore:avd-aws-0031
 # trivy:ignore:avd-aws-0033
 resource "aws_ecr_repository" "containers" {
+  #checkov:skip=CKV_AWS_51:Mutable tags allow the build pipeline to republish the same primary tag on a rebuild.
+  #checkov:skip=CKV_AWS_136:AWS-managed AES256 encryption is intentionally used; customer-managed ECR keys are optional.
   for_each             = var.ecr_repository_names
   name                 = each.value
   image_tag_mutability = var.ecr_image_tag_mutability
