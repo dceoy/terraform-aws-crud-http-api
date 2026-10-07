@@ -1,5 +1,5 @@
-# trivy:ignore:avd-aws-0024
-# trivy:ignore:avd-aws-0025
+#trivy:ignore:AWS-0024
+#trivy:ignore:AWS-0025
 resource "aws_dynamodb_table" "db" {
   name                        = local.dynamodb_table_name
   billing_mode                = var.dynamodb_billing_mode
