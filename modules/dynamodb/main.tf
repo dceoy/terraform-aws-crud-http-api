@@ -1,6 +1,8 @@
 #trivy:ignore:AWS-0024
 #trivy:ignore:AWS-0025
 resource "aws_dynamodb_table" "db" {
+  #checkov:skip=CKV_AWS_28:Point-in-time recovery is opt-in in this cost-controlled example.
+  #checkov:skip=CKV2_AWS_16:The example uses PAY_PER_REQUEST; provisioned-capacity autoscaling is not required.
   name                        = local.dynamodb_table_name
   billing_mode                = var.dynamodb_billing_mode
   hash_key                    = var.dynamodb_hash_key
