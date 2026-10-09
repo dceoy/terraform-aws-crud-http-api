@@ -76,6 +76,8 @@ jobs:
       - terraform-lint-and-scan
       - python-lint-and-scan
     permissions:
+      checks: read
+      statuses: read
       contents: write
       pull-requests: write
       actions: read
