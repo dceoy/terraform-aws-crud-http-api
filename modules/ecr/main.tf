@@ -1,5 +1,5 @@
-# trivy:ignore:avd-aws-0031
-# trivy:ignore:avd-aws-0033
+# trivy:ignore:AWS-0031
+# trivy:ignore:AWS-0033
 # Mutable tags are required by the current deployment pipeline; immutable digests identify releases.
 # nosemgrep: terraform.aws.security.aws-ecr-mutable-image-tags.aws-ecr-mutable-image-tags
 resource "aws_ecr_repository" "containers" {
