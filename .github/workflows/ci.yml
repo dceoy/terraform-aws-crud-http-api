@@ -31,6 +31,8 @@ jobs:
     uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
     with:
       search-path: .
+      trivy-scanners: vuln,misconfig
+      trivy-report-artifact-name: terraform-trivy-diagnostic
       terraform-version: latest
       terragrunt-version: latest
   terraform-lock-files-upgrade-and-pr-merge:
