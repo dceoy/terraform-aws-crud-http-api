@@ -59,7 +59,7 @@ resource "aws_lambda_function" "functions" {
   }
 }
 
-# trivy:ignore:avd-aws-0017
+# trivy:ignore:AWS-0017
 resource "aws_cloudwatch_log_group" "functions" {
   #checkov:skip=CKV_AWS_338:Log retention is configurable; the example uses 30 days to limit storage costs.
   for_each          = local.lambda_function_names
