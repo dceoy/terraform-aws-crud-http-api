@@ -1,3 +1,5 @@
+# Tracing defaults to Active and is configurable by the caller.
+# nosemgrep: terraform.aws.security.aws-lambda-x-ray-tracing-not-active.aws-lambda-x-ray-tracing-not-active
 resource "aws_lambda_function" "functions" {
   #checkov:skip=CKV_AWS_116:API Gateway invokes these functions synchronously; asynchronous dead-letter handling is not used.
   #checkov:skip=CKV_AWS_272:These functions use container images, which do not support Lambda code signing.
