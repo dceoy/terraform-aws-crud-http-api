@@ -7,6 +7,8 @@ resource "aws_lambda_function" "functions" {
   function_name                  = local.lambda_function_names[each.key]
   description                    = "Lambda function for ${each.key}"
   role                           = each.value.arn
+# Lambda uses AWS-managed encryption when no customer KMS ARN is supplied.
+  # nosemgrep: terraform.aws.security.aws-lambda-environment-unencrypted.aws-lambda-environment-unencrypted
   kms_key_arn                    = var.kms_key_arn
   package_type                   = "Image"
   image_uri                      = var.lambda_image_uris[each.key]
