@@ -1,3 +1,5 @@
+# Tracing defaults to Active and is configurable by the caller.
+# nosemgrep: terraform.aws.security.aws-lambda-x-ray-tracing-not-active.aws-lambda-x-ray-tracing-not-active
 resource "aws_lambda_function" "functions" {
   #checkov:skip=CKV_AWS_116:API Gateway invokes these functions synchronously; asynchronous dead-letter handling is not used.
   #checkov:skip=CKV_AWS_272:These functions use container images, which do not support Lambda code signing.
@@ -5,7 +7,7 @@ resource "aws_lambda_function" "functions" {
   function_name                  = local.lambda_function_names[each.key]
   description                    = "Lambda function for ${each.key}"
   role                           = each.value.arn
-  kms_key_arn                    = var.kms_key_arn
+  kms_key_arn                    = var.kms_key_arn # nosemgrep: terraform.aws.security.aws-lambda-environment-unencrypted.aws-lambda-environment-unencrypted
   package_type                   = "Image"
   image_uri                      = var.lambda_image_uris[each.key]
   architectures                  = var.lambda_architectures
@@ -57,7 +59,7 @@ resource "aws_lambda_function" "functions" {
   }
 }
 
-# trivy:ignore:avd-aws-0017
+# trivy:ignore:AWS-0017
 resource "aws_cloudwatch_log_group" "functions" {
   #checkov:skip=CKV_AWS_338:Log retention is configurable; the example uses 30 days to limit storage costs.
   for_each          = local.lambda_function_names

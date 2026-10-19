@@ -30,6 +30,8 @@ jobs:
       contents: write
     uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
     with:
+      submit-dependencies: true
+      snapshot-correlator: terraform-source
       search-path: .
       terraform-version: latest
       terragrunt-version: latest

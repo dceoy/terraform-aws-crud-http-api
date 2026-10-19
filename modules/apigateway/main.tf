@@ -100,7 +100,7 @@ resource "aws_lambda_permission" "http" {
   }
 }
 
-# trivy:ignore:avd-aws-0017
+# trivy:ignore:AWS-0017
 resource "aws_cloudwatch_log_group" "http" {
   #checkov:skip=CKV_AWS_338:Log retention is configurable; the example uses 30 days to limit storage costs.
   name              = "/${var.system_name}/${var.env_type}/apigateway/${aws_apigatewayv2_api.http.id}"
