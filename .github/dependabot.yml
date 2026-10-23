@@ -10,6 +10,8 @@ updates:
       github-actions-dependencies:
         patterns:
           - '*'
+    cooldown:
+      default-days: 1
   - package-ecosystem: docker
     directory: /src/
     schedule:
@@ -19,10 +21,14 @@ updates:
       docker-dependencies:
         patterns:
           - '*'
+    cooldown:
+      default-days: 1
   - package-ecosystem: uv
     directory: /
     schedule:
       interval: daily
+    cooldown:
+      default-days: 1
     versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 10
     groups:
@@ -40,3 +46,5 @@ updates:
       terraform-dependencies:
         patterns:
           - '*'
+    cooldown:
+      default-days: 1
