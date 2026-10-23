@@ -27,14 +27,33 @@ jobs:
         && (! startswith(github.head_ref, 'renovate/'))
       ) || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     permissions:
-      contents: write
+      contents: read
     uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
     with:
-      submit-dependencies: true
-      snapshot-correlator: terraform-source
+      use-trivy: ${{ github.ref != format('refs/heads/{0}', github.event.repository.default_branch) }}
       search-path: .
       terraform-version: latest
       terragrunt-version: latest
+  terraform-dependency-scan:
+    if: >
+      (github.event_name == 'push'
+        || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan'))
+      && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    permissions:
+      contents: write
+    uses: dceoy/gha-for-devops/.github/workflows/trivy-scan.yml@main  # zizmor: ignore[unpinned-uses]
+    with:
+      scan-type: filesystem
+      scan-ref: .
+      submit-dependencies: true
+      snapshot-correlator: terraform-source
+      trivy-scanners: vuln,secret,misconfig
+      trivy-severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
+      trivy-ignore-unfixed: true
+      trivy-exit-code: 1
+      trivy-timeout: 5m0s
+      report-format: sarif
+      runs-on: ubuntu-slim
   terraform-lock-files-upgrade-and-pr-merge:
     if: >
       (
