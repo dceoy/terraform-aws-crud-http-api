@@ -16,7 +16,7 @@ RUN \
       --mount=type=cache,target=/var/cache/dnf,sharing=locked \
       --mount=type=cache,target=/var/lib/yum,sharing=locked \
       --mount=type=cache,target=/var/lib/dnf,sharing=locked \
-      dnf -y upgrade \
+      dnf -y --refresh upgrade \
       && dnf -y install ca-certificates
 
 RUN \
@@ -51,7 +51,7 @@ RUN \
       --mount=type=cache,target=/var/cache/dnf,sharing=locked \
       --mount=type=cache,target=/var/lib/yum,sharing=locked \
       --mount=type=cache,target=/var/lib/dnf,sharing=locked \
-      dnf -y upgrade \
+      dnf -y --refresh upgrade \
       && dnf -y install shadow-utils
 
 RUN \
