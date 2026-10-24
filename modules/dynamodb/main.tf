@@ -1,6 +1,9 @@
-# trivy:ignore:avd-aws-0024
-# trivy:ignore:avd-aws-0025
-resource "aws_dynamodb_table" "db" {
+# DynamoDB remains encrypted with AWS-owned keys when no customer KMS ARN is supplied.
+#trivy:ignore:AWS-0024
+#trivy:ignore:AWS-0025
+resource "aws_dynamodb_table" "db" { # nosemgrep: terraform.aws.security.aws-dynamodb-table-unencrypted.aws-dynamodb-table-unencrypted
+  #checkov:skip=CKV_AWS_28:Point-in-time recovery is opt-in in this cost-controlled example.
+  #checkov:skip=CKV2_AWS_16:The example uses PAY_PER_REQUEST; provisioned-capacity autoscaling is not required.
   name                        = local.dynamodb_table_name
   billing_mode                = var.dynamodb_billing_mode
   hash_key                    = var.dynamodb_hash_key

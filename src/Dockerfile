@@ -16,8 +16,8 @@ RUN \
       --mount=type=cache,target=/var/cache/dnf,sharing=locked \
       --mount=type=cache,target=/var/lib/yum,sharing=locked \
       --mount=type=cache,target=/var/lib/dnf,sharing=locked \
-      dnf -y upgrade \
-      && dnf -y install ca-certificates
+      dnf -yq --refresh upgrade \
+      && dnf -yq install ca-certificates
 
 RUN \
       --mount=type=cache,target=/root/.cache/pip \
@@ -51,8 +51,8 @@ RUN \
       --mount=type=cache,target=/var/cache/dnf,sharing=locked \
       --mount=type=cache,target=/var/lib/yum,sharing=locked \
       --mount=type=cache,target=/var/lib/dnf,sharing=locked \
-      dnf -y upgrade \
-      && dnf -y install shadow-utils
+      dnf -yq --refresh upgrade \
+      && dnf -yq install shadow-utils
 
 RUN \
       /sbin/groupadd --gid "${USER_GID}" "${USER_NAME}" \
