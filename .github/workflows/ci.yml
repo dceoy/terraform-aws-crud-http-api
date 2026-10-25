@@ -21,10 +21,8 @@ jobs:
   terraform-lint-and-scan:
     if: >
       github.event_name == 'push'
-      || (
-        github.event_name == 'pull_request'
-        && (! startswith(github.head_ref, 'dependabot/terraform/'))
-      ) || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
+      || github.event_name == 'pull_request'
+      || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     permissions:
       contents: read
     uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
@@ -53,24 +51,16 @@ jobs:
       trivy-timeout: 5m0s
       report-format: sarif
       runs-on: ubuntu-slim
-  terraform-lock-files-upgrade-and-pr-merge:
-    if: >
-      (
-        github.event_name == 'pull_request'
-        && startswith(github.head_ref, 'dependabot/terraform/')
-      ) || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'upgrade')
+  terraform-lock-files-upgrade:
+    if: github.event_name == 'workflow_dispatch' && inputs.workflow == 'upgrade'
     permissions:
-      actions: read
       contents: write
       pull-requests: write
-      security-events: write
-    uses: dceoy/gha-for-devops/.github/workflows/terraform-dependabot-lock-upgrade-and-merge.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/terraform-lock-files-upgrade.yml@main
     with:
       terragrunt-working-directories: envs/dev
       terraform-version: latest
-      search-path-for-lint-and-scan: .
       terragrunt-version: latest
-      merge-pr: ${{ github.event_name == 'pull_request' }}
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   python-lint-and-scan:
@@ -88,7 +78,6 @@ jobs:
     if: >
       github.event_name == 'pull_request'
       && github.actor == 'dependabot[bot]'
-      && (! startswith(github.head_ref, 'dependabot/terraform/'))
     needs:
       - terraform-lint-and-scan
       - python-lint-and-scan
@@ -100,6 +89,6 @@ jobs:
       statuses: read
     uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
-      unconditional: true
+      unconditional: ${{ ! startsWith(github.head_ref, 'dependabot/terraform/') }}
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
