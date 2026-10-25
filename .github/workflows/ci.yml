@@ -89,6 +89,6 @@ jobs:
       statuses: read
     uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@main
     with:
-      unconditional: ${{ ! startsWith(github.head_ref, 'dependabot/terraform/') }}
+      unconditional: true
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
