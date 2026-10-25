@@ -93,3 +93,40 @@ jobs:
       unconditional: true
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  temporary-module-lock-refresh:
+    if: >
+      github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && github.event.pull_request.head.ref == 'refactor/remove-terraform-lock-legacy-inputs'
+      && github.event.pull_request.user.login == 'dceoy'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout trusted PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Setup latest Terraform
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e
+        with:
+          terraform_version: latest
+      - name: Regenerate incompatible Terraform provider locks
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' lockfile; do
+            working_dir="$(dirname "${lockfile}")"
+            if compgen -G "${working_dir}/*.tf" > /dev/null; then
+              terraform -chdir="${working_dir}" init -backend=false -upgrade -reconfigure
+              rm -rf "${working_dir}/.terraform"
+            fi
+          done < <(find modules -mindepth 2 -maxdepth 2 -name .terraform.lock.hcl -print0)
+          git add -u -- modules
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'fix: refresh Terraform provider lockfiles for current constraints'
+            git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
+          fi
