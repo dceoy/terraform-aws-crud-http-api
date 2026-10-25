@@ -3,5 +3,6 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/ecr"
+  source                   = "${get_repo_root()}/modules/ecr"
+  copy_terraform_lock_file = false
 }

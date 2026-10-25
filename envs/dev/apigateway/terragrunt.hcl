@@ -31,5 +31,6 @@ inputs = {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/apigateway"
+  source                   = "${get_repo_root()}/modules/apigateway"
+  copy_terraform_lock_file = false
 }

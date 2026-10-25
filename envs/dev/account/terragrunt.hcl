@@ -16,5 +16,6 @@ inputs = {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/account"
+  source                   = "${get_repo_root()}/modules/account"
+  copy_terraform_lock_file = false
 }
