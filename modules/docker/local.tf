@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 
 locals {
   account_id = data.aws_caller_identity.current.account_id
-  region     = data.aws_region.current.name
+  region     = data.aws_region.current.region
   docker_image_primary_names = {
     for k, v in var.ecr_repository_urls : k => "${v}:${var.docker_image_primary_tag}"
   }
