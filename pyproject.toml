@@ -3,18 +3,18 @@ name = "dynamodb-handler"
 version = "0.0.1"
 requires-python = ">=3.13"
 dependencies = [
-  "aws-lambda-powertools[tracer]>=3.4.1,<4.0.0",
-  "boto3>=1.36.2,<2.0.0",
+  "aws-lambda-powertools[tracer]>=3.37.0,<4.0.0",
+  "boto3>=1.43.118,<2.0.0",
 ]
 
 [dependency-groups]
 dev = [
-  "ruff>=0.14.0,<0.18.0",
+  "ruff>=0.17.2,<0.18.0",
   "pyright>=1.1.379,<1.2.0",
   "types-aws-xray-sdk>=2.14.0.20240606,<2.16.0",
   "types-jmespath>=1.1.0.20260724,<1.2.0",
   "types-requests>=2.33.0.20261006,<2.34.0",
-  "boto3-stubs>=1.36.5,<2.0.0",
+  "boto3-stubs>=1.43.118,<2.0.0",
 ]
 
 [tool.uv]
@@ -36,13 +36,13 @@ ignore = [
   "EXE",  # flake8-executable (EXE)
   "FA",  # flake8-future-annotations (FA)
   "RET",  # flake8-return (RET)
-  "B008",     # function-call-in-default-argument
-  "A002",     # builtin-argument-shadowing
-  "A004",     # builtin-import-shadowing
-  "COM812",   # missing-trailing-comma
-  "ISC001",   # single-line-implicit-string-concatenation
-  "PIE790",   # unnecessary-placeholder
-  "TRY003",   # raise-vanilla-args
+  "function-call-in-default-argument",
+  "builtin-argument-shadowing",
+  "builtin-import-shadowing",
+  "missing-trailing-comma",
+  "single-line-implicit-string-concatenation",
+  "unnecessary-placeholder",
+  "raise-vanilla-args",
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -56,5 +56,5 @@ reportUnknownVariableType = false
 reportUnknownArgumentType = false
 
 [build-system]
-requires = ["hatchling>=1.26"]
+requires = ["hatchling>=1.32.4"]
 build-backend = "hatchling.build"
