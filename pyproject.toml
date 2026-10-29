@@ -3,8 +3,8 @@ name = "dynamodb-handler"
 version = "0.0.1"
 requires-python = ">=3.13"
 dependencies = [
-  "aws-lambda-powertools[tracer]>=3.37.0,<4.0.0",
-  "boto3>=1.43.120,<2.0.0",
+  "aws-lambda-powertools[tracer]>=3.38.0,<4.0.0",
+  "boto3>=1.43.121,<2.0.0",
 ]
 
 [dependency-groups]
@@ -14,7 +14,7 @@ dev = [
   "types-aws-xray-sdk>=2.14.0.20240606,<2.16.0",
   "types-jmespath>=1.1.0.20260724,<1.2.0",
   "types-requests>=2.33.0.20261006,<2.34.0",
-  "boto3-stubs>=1.43.120,<2.0.0",
+  "boto3-stubs>=1.43.121,<2.0.0",
 ]
 
 [tool.uv]
@@ -56,5 +56,5 @@ reportUnknownVariableType = false
 reportUnknownArgumentType = false
 
 [build-system]
-requires = ["hatchling>=1.32.4"]
+requires = ["hatchling>=1.33.0"]
 build-backend = "hatchling.build"
