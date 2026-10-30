@@ -139,17 +139,22 @@ resource "aws_iam_role_policy" "logs" {
           Sid      = "AllowDescribeLogGroups"
           Effect   = "Allow"
           Action   = ["logs:DescribeLogGroups"]
-          Resource = ["arn:aws:logs:${local.region}:${local.account_id}:log-group:*"]
+          Resource = ["*"]
+        },
+        {
+          Sid      = "AllowDescribeLogStreams"
+          Effect   = "Allow"
+          Action   = ["logs:DescribeLogStreams"]
+          Resource = [aws_cloudwatch_log_group.functions[each.key].arn]
         },
         {
           Sid    = "AllowLogStreamAccess"
           Effect = "Allow"
           Action = [
             "logs:CreateLogStream",
-            "logs:PutLogEvents",
-            "logs:DescribeLogStreams"
+            "logs:PutLogEvents"
           ]
-          Resource = ["${aws_cloudwatch_log_group.functions[each.key].arn}:*"]
+          Resource = ["${aws_cloudwatch_log_group.functions[each.key].arn}:log-stream:*"]
         }
       ],
       (
