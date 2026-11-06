@@ -4,12 +4,12 @@ version = "0.0.1"
 requires-python = ">=3.13"
 dependencies = [
   "aws-lambda-powertools[tracer]>=3.39.0,<4.0.0",
-  "boto3>=1.43.124,<2.0.0",
+  "boto3>=1.43.125,<2.0.0",
 ]
 
 [dependency-groups]
 dev = [
-  "ruff>=0.17.3,<0.18.0",
+  "ruff>=0.17.4,<0.18.0",
   "pyright>=1.1.379,<1.2.0",
   "types-aws-xray-sdk>=2.16.0.20261104,<2.17.0",
   "types-jmespath>=1.1.0.20260724,<1.2.0",
