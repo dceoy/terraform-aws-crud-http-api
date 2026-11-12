@@ -25,7 +25,7 @@ jobs:
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-scan')
     permissions:
       contents: read
-    uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/terraform-lint-and-scan.yml@9e394d7c18b3a00fb853cd3c693cc4eeb5f0c825  # v2.3.0
     with:
       use-trivy: ${{ github.ref != format('refs/heads/{0}', github.event.repository.default_branch) }}
       search-path: .
@@ -38,7 +38,7 @@ jobs:
       && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     permissions:
       contents: write
-    uses: dceoy/gha-for-devops/.github/workflows/trivy-scan.yml@main  # zizmor: ignore[unpinned-uses]
+    uses: dceoy/gha-for-devops/.github/workflows/trivy-scan.yml@9e394d7c18b3a00fb853cd3c693cc4eeb5f0c825  # v2.3.0
     with:
       scan-type: filesystem
       scan-ref: .
@@ -56,7 +56,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: dceoy/gha-for-devops/.github/workflows/terraform-lock-files-upgrade.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/terraform-lock-files-upgrade.yml@9e394d7c18b3a00fb853cd3c693cc4eeb5f0c825  # v2.3.0
     with:
       terragrunt-working-directories: envs/dev
       terraform-working-directories: modules
@@ -71,7 +71,7 @@ jobs:
       || (github.event_name == 'workflow_dispatch' && inputs.workflow == 'lint-and-test')
     permissions:
       contents: read
-    uses: dceoy/gha-for-devops/.github/workflows/python-package-lint-and-scan.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/python-package-lint-and-scan.yml@9e394d7c18b3a00fb853cd3c693cc4eeb5f0c825  # v2.3.0
     with:
       package-path: .
       python-version: 3.x
@@ -88,7 +88,7 @@ jobs:
       contents: write
       pull-requests: write
       statuses: read
-    uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@main
+    uses: dceoy/gha-for-devops/.github/workflows/dependabot-auto-merge.yml@9e394d7c18b3a00fb853cd3c693cc4eeb5f0c825  # v2.3.0
     with:
       unconditional: true
     secrets:
