@@ -481,7 +481,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aws-lambda-powertools", extras = ["tracer"], specifier = ">=3.40.0,<4.0.0" },
+    { name = "aws-lambda-powertools", extras = ["tracer"], specifier = ">=3.41.0,<4.0.0" },
     { name = "boto3", specifier = ">=1.44.3,<2.0.0" },
 ]
 
